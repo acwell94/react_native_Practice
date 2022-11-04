@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
   ScrollView,
+  FlatList,
 } from "react-native";
 
 export default function App() {
@@ -17,7 +18,7 @@ export default function App() {
   function addGoalHandler() {
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
-      enteredGoalText,
+      { text: enteredGoalText, id: Math.random().toString() },
     ]);
   }
   return (
@@ -31,15 +32,19 @@ export default function App() {
         <Button title="Add Goal" onPress={addGoalHandler} />
       </View>
       <View style={styles.goalsContainer}>
-        <ScrollView>
-          {courseGoals.map((goal, idx) => (
-            <View style={styles.goalItem} key={idx}>
-              <Text style={styles.goalText} key={goal}>
-                {goal}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
+        <FlatList
+          data={courseGoals}
+          renderItem={(itemData) => {
+            return (
+              <View style={styles.goalItem}>
+                <Text style={styles.goalText}>{itemData.item.text}</Text>
+              </View>
+            );
+          }}
+          keyExtractor={(item, idx) => {
+            return item.id;
+          }}
+        />
       </View>
     </View>
   );
